@@ -43,6 +43,7 @@ class MyFirstThread(QtWidgets.QWidget):
         self.t.set_sec(self.lineEdit.text())
         self.t.start()
 
+    @QtCore.Slot()
     def set_text_lineedit(self, text):
         self.lineEdit.setText(text)
 
