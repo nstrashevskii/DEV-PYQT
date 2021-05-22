@@ -175,7 +175,7 @@
                    </size>
                   </property>
                   <property name="currentIndex">
-                   <number>0</number>
+                   <number>2</number>
                   </property>
                   <widget class="QWidget" name="page">
                    <property name="geometry">
@@ -458,9 +458,9 @@ vfvfvf</string>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_10">
             <item>
-             <widget class="QPushButton" name="pushButton_2">
+             <widget class="QPushButton" name="pushButtonOpen">
               <property name="text">
-               <string>PushButton1</string>
+               <string>Открыть</string>
               </property>
              </widget>
             </item>
@@ -479,9 +479,9 @@ vfvfvf</string>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_4">
+             <widget class="QPushButton" name="pushButtonAccept">
               <property name="text">
-               <string>PushButton4</string>
+               <string>Применить</string>
               </property>
              </widget>
             </item>
