@@ -9,24 +9,24 @@ class MyFirstWindow(QtWidgets.QMainWindow):
 
         self.InitUI()
 
-    #     self.ui = test_form.Ui_MainWindow()
-    #     self.ui.setupUi(self)
-    #
-    #     self.ui.pushButtonOpen.clicked.connect(self.onPushButtonOpenClicked)
-    #     self.ui.pushButtonAccept.clicked.connect(self.onPushButtonAcceptClicked)
-    #
-    # def onPushButtonOpenClicked(self):
-    #     FilePath, ok = QtWidgets.QFileDialog.getOpenFileName(self, 'Выбор файла', '.')
-    #     print(ok)
-    #     if not ok:
-    #         return
-    #     print(FilePath)
-    #
-    # def onPushButtonAcceptClicked(self):
-    #     print(self.ui.lineEdit.text())
-    #     print(self.ui.lineEdit_2.text())
-    #     print(self.ui.lineEdit_3.text())
-    #     print(self.ui.lineEdit_4.text())
+        self.ui = test_form.Ui_MainWindow()
+        self.ui.setupUi(self)
+
+        self.ui.pushButtonOpen.clicked.connect(self.onPushButtonOpenClicked)
+        self.ui.pushButtonAccept.clicked.connect(self.onPushButtonAcceptClicked)
+
+    def onPushButtonOpenClicked(self):
+        FilePath, ok = QtWidgets.QFileDialog.getOpenFileName(self, 'Выбор файла', '.')
+        print(ok)
+        if not ok:
+            return
+        print(FilePath)
+
+    def onPushButtonAcceptClicked(self):
+        print(self.ui.lineEdit.text())
+        print(self.ui.lineEdit_2.text())
+        print(self.ui.lineEdit_3.text())
+        print(self.ui.lineEdit_4.text())
 
     def InitUI(self):
         # centralWidget = QtWidgets.QWidget()
