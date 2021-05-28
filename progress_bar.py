@@ -19,8 +19,11 @@ class MyFirstProgressBar(QtWidgets.QWidget):
         self.cpu_threed.cpu_count.connect(self.update_pb, QtCore.Qt.QueuedConnection)
 
     def update_pb(self, cpu_percent_list):
+        cpu_percent_list = psutil.cpu_percent(interval=1, percpu=True)
         for w in range(self.layout.count()):
-            self.layout.itemAt(w).widget()
+            l1 = self.layout.itemAt(w).widget()
+            l2 = l1.layout().itemAt(0).widget()
+            l2.setValue(cpu_percent_list[w])
 
 
 class cpu_counting(QtWidgets.QWidget):
@@ -43,10 +46,13 @@ class cpu_counting(QtWidgets.QWidget):
 
 
 class CPUPercent(QtCore.QThread):
-    cpu_count = QtCore.Signal(list)
+    cpu_count = QtCore.pyqtSignal(list)
 
-    while True:
-
+    def run(self) -> None:
+        self.cpu_percent_list = psutil.cpu_percent(interval=1, percpu=True)
+        while True:
+            self.cpu_count.emit(self.cpu_percent_list)
+            time.sleep(4)
 
 
 if __name__ == '__main__':

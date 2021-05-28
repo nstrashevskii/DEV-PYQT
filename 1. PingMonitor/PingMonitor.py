@@ -1,6 +1,5 @@
 import sys, os, re, time, subprocess, json
-from PySide2 import QtCore
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets, QtGui, QtCore
 import PingMonitor_design, PingMonitorSettings_design, Tracert_design
 from PyQt5.QtCore import QRegExp
 from PyQt5.QtGui import QRegExpValidator
@@ -167,7 +166,7 @@ class PingMonitor(QtWidgets.QWidget, PingMonitor_design.Ui_Form):
 
 
 class AllThread(QtCore.QThread):
-    current_count = QtCore.Signal(str)
+    current_count = QtCore.pyqtSignal(str)
 
     def run(self) -> None:
         self.status = True
