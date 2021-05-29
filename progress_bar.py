@@ -29,7 +29,6 @@ class MyFirstProgressBar(QtWidgets.QWidget):
             l3.setText(str(f'загрузка ядра {cpu_percent_list[w]} %'))
 
 
-
 class cpu_counting(QtWidgets.QWidget):
     def __init__(self, cpu_num, parent=None):
         super(cpu_counting, self).__init__(parent)

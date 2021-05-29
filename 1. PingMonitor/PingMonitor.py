@@ -1,9 +1,8 @@
-import sys, os, re, time, subprocess, json
+import sys, os, re, time, subprocess
 from PyQt5 import QtWidgets, QtGui, QtCore
 import PingMonitor_design, PingMonitorSettings_design, Tracert_design
 from PyQt5.QtCore import QRegExp
 from PyQt5.QtGui import QRegExpValidator
-from PyQt5.QtCore import pyqtSignal
 
 
 # class LineEditIpAdd():
