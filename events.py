@@ -12,6 +12,8 @@ class MyEventHandler(QtWidgets.QMainWindow):
 
         self.button2.installEventFilter(self)
         self.button1.installEventFilter(self)
+        self.button1.clicked.connect(self.getScreenInfo)
+        self.button2.clicked.connect(self.editPosition)
 
         self.event_lookup = {"0": "QEvent::None",
                              "114": "QEvent::ActionAdded",
@@ -192,6 +194,26 @@ class MyEventHandler(QtWidgets.QMainWindow):
 
     def mouseDoubleClickEvent(self, event: QtGui.QMouseEvent) -> None:
         print(self.event_lookup[str(event.type())])
+
+    def getScreenInfo(self):
+        screen_count = QtWidgets.QApplication.screens()
+        print(f"\n {30 * '='} Systeminfo {30 * '='}")
+        print(f"Кол-во экранов: {len(screen_count)}")
+        print(f"Основное окно: {QtWidgets.QApplication.primaryScreen().name()}")
+        for _ in screen_count:
+            print(f"Разрешение экрана {_.name()} составляет {_.size().width()} на {_.size().height()}")
+        print(f"Окно находится на экране {QtWidgets.QApplication.screenAt(self.pos()).name()}")
+
+    def editPosition(self):
+
+        screenWidth = QtWidgets.QApplication.screenAt(self.pos()).size().width()
+        screenHeight = QtWidgets.QApplication.screenAt(self.pos()).size().height()
+        buttonText = self.sender()
+
+        position = {"2": (0, 0)
+                    }
+
+        self.move(position.get(buttonText.text())[0], position.get(buttonText.text())[1])
 
 
 if __name__ == "__main__":
