@@ -69,7 +69,6 @@ class PingMonitor(QtWidgets.QWidget, PingMonitor_design.Ui_Form):
 
     def setTextTable(self, response):
         for i in range(self.tableWidget.rowCount()):
-            print(i)
             if self.tableWidget.item(i, 0).text() == '':
                 continue
             else:
@@ -81,19 +80,23 @@ class PingMonitor(QtWidgets.QWidget, PingMonitor_design.Ui_Form):
                     )
                 except subprocess.CalledProcessError:
                     response1 = None
-                print(response1)
                 if response1 is None:
                     self.tableWidget.setItem(i, 1, QtWidgets.QTableWidgetItem('Host is DOWN'))
                     self.plainTextEdit.appendPlainText(
                         f'{datetime.datetime.now()} : Host {self.tableWidget.item(i, 0).text()} not responding')
                 else:
                     self.tableWidget.setItem(i, 1, QtWidgets.QTableWidgetItem('Host is UP'))
-                    self.plainTextEdit.appendPlainText(response1)
+                    self.plainTextEdit.appendPlainText(f'{datetime.datetime.now()} : {response1}')
 
     def saveIp(self):
         with open('IP.txt', 'w') as f:
             for i in range(self.tableWidget.rowCount()):
                 f.writelines(self.tableWidget.item(i, 0).text())
+
+    def saveLogs(self):
+        time_logs = datetime.datetime.now()
+        with open(f'log_{time_logs}.txt', 'w') as f:
+            f.write(self.plainTextEdit.toPlainText())
 
     def saveCurrentIp(self):
         with open('Current_IP.txt', 'w') as f:
@@ -110,9 +113,11 @@ class PingMonitor(QtWidgets.QWidget, PingMonitor_design.Ui_Form):
                                                    QtWidgets.QMessageBox.Yes)
         if SaveOrNot == QtWidgets.QMessageBox.Yes:
             self.saveIp()
+            self.saveLogs()
             self.clearCurrentIP()
             super().closeEvent(event)
         else:
+            self.saveLogs()
             self.clearCurrentIP()
             super().closeEvent(event)
 
@@ -155,13 +160,9 @@ class AllThread(QtCore.QThread):
 
     def run(self) -> None:
         self.status = True
-        count = 3
         while self.status:
-            count -= 1
             self.current_count.emit('')
-            time.sleep(30)
-            if count == 0:
-                break
+            time.sleep(10)
 
 
 if __name__ == '__main__':
