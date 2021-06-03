@@ -1,3 +1,4 @@
+import datetime
 import sys, os, re, time, subprocess
 from PyQt5 import QtWidgets, QtGui, QtCore
 import PingMonitor_design, Tracert_design
@@ -35,9 +36,10 @@ class PingMonitor(QtWidgets.QWidget, PingMonitor_design.Ui_Form):
         self.t.status = False
 
     def startThread(self):
-        if self.tableWidget.item(0, 0) is None:
-            QtWidgets.QMessageBox.warning(self, 'Ошибка', 'Не введен ip адрес')
-            return
+        for i in range(self.tableWidget.rowCount()):
+            if self.tableWidget.item(i, 0) is None:
+                QtWidgets.QMessageBox.warning(self, 'Ошибка', 'Не введен ip адрес')
+                return
         self.t.start()
 
     def onPushButtonTracerClicked(self):
@@ -60,28 +62,33 @@ class PingMonitor(QtWidgets.QWidget, PingMonitor_design.Ui_Form):
             rowPosition = self.tableWidget.rowCount()
             self.tableWidget.insertRow(rowPosition)
             self.tableWidget.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(str(text) + '\n'))
-        else:
+        elif ipRegex.match(text) is False:
             error_dialog = QtWidgets.QErrorMessage()
             error_dialog.showMessage('Введен некорректный ip адрес!')
             error_dialog.exec_()
 
     def setTextTable(self, response):
         for i in range(self.tableWidget.rowCount()):
-            try:
-                response1 = subprocess.check_output(
-                    ['ping', '-c', '3', self.tableWidget.item(i, 0).text()],
-                    stderr=subprocess.STDOUT,
-                    universal_newlines=True
-                )
-            except subprocess.CalledProcessError:
-                response1 = None
-            self.plainTextEdit.appendPlainText(response1)
-            response = os.system("ping -c 1 " + self.tableWidget.item(i, 0).text())
-            if response == 0:
-                self.tableWidget.setItem(i, 1, QtWidgets.QTableWidgetItem('Host is UP'))
-
+            print(i)
+            if self.tableWidget.item(i, 0).text() == '':
+                continue
             else:
-                self.tableWidget.setItem(i, 1, QtWidgets.QTableWidgetItem('Host is DOWN'))
+                try:
+                    response1 = subprocess.check_output(
+                        ['ping', '-c', '1', self.tableWidget.item(i, 0).text()],
+                        stderr=subprocess.STDOUT,
+                        universal_newlines=True
+                    )
+                except subprocess.CalledProcessError:
+                    response1 = None
+                print(response1)
+                if response1 is None:
+                    self.tableWidget.setItem(i, 1, QtWidgets.QTableWidgetItem('Host is DOWN'))
+                    self.plainTextEdit.appendPlainText(
+                        f'{datetime.datetime.now()} : Host {self.tableWidget.item(i, 0).text()} not responding')
+                else:
+                    self.tableWidget.setItem(i, 1, QtWidgets.QTableWidgetItem('Host is UP'))
+                    self.plainTextEdit.appendPlainText(response1)
 
     def saveIp(self):
         with open('IP.txt', 'w') as f:
@@ -133,7 +140,6 @@ class TracerWindow(QtWidgets.QWidget, Tracert_design.Ui_Form):
                     )
                 except subprocess.CalledProcessError:
                     response = None
-                print(response)
                 self.plainTextEdit.appendPlainText(response)
 
     def stopThread(self):
@@ -144,17 +150,16 @@ class TracerWindow(QtWidgets.QWidget, Tracert_design.Ui_Form):
         super().closeEvent(event)
 
 
-
 class AllThread(QtCore.QThread):
     current_count = QtCore.pyqtSignal(str)
 
     def run(self) -> None:
         self.status = True
-        count = 20
+        count = 3
         while self.status:
             count -= 1
             self.current_count.emit('')
-            time.sleep(10)
+            time.sleep(30)
             if count == 0:
                 break
 
